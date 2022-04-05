@@ -1,36 +1,19 @@
 import Button from './Button';
-import { forwardRef } from 'react';
+import Message from './Message';
+import { forwardRef, useState } from 'react';
 
 const EditQuestionForm = forwardRef((props, ref) => {
   const {ref1, ref2} = ref
-  // const [question, setQuestion] = useState('')
-  // const [answer, setAnswer] = useState('')
+
+  const [messageExists, setmessageExists] = useState(false)
+
   const saveEdit = (e) => {
     e.preventDefault()
-    console.log(ref1.current.value)
     if(!ref1.current.value || !ref2.current.value) {
-      alert('please input text')
+      setmessageExists(true)
+      setTimeout(() => {setmessageExists(false)}, 1500)
+      return
     }
-    // let id;
-    // let uniqueId;
-    // let index;
-
-    // do {
-    //     uniqueId = Math.floor(Math.random() * 10000)
-    //     index = this.groceryItems.findIndex((groceryItem) => {
-    //     return groceryItem.id === uniqueId
-    //     })
-    // } 
-    // while(index !== -1)
-
-    // id = uniqueId
-
-    // newGrocery = {
-    //     id: id,
-    //     text: this.text
-    // }
-
-    // let id = Math.floor(Math.random() * 10000);
 
     props.onEdit({id: props.flashCardId.id, question: ref1.current.value, answer: ref2.current.value})
 
@@ -42,12 +25,20 @@ const EditQuestionForm = forwardRef((props, ref) => {
   }
 
   return (
-    <div className='container'>
-      <Button btnClick={close} btnText='X' />
+    <div className='formDiv'>
+      <Button className="cancelbtn" btnClick={close} btnText='X' />
+      <div className='clearBoth'></div>
+      {messageExists && <Message message="Please fill input fields"/>}
       <form onSubmit={saveEdit}>
-        <textarea ref={ref1}/>
-        <textarea ref={ref2}/>
-        <Button btnText='Save Edit'/>
+        <div className='questionDiv'>
+          <label htmlFor='question'>Question</label>
+          <textarea id='question' ref={ref1} rows="5" style={{display: 'block', width: '95%'}}/>
+        </div> 
+        <div className='answerDiv'>
+          <label htmlFor='answer'>Answer</label> 
+          <textarea id='answer' ref={ref2} rows="5" style={{display: 'block', width: '95%'}}/>
+        </div>  
+        <Button className="saveEditbtn" btnText='Save Edit'/>
       </form>
     </div>
   )
